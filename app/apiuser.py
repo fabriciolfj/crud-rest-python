@@ -16,8 +16,28 @@ def create_user():
     cursor.execute(query, (user.name, user.age))
     conn.commit()
 
-
     return jsonify({"message": "usuario criado"})
+
+
+@app.route("/users", methods=["GET"])
+def list_users():
+    conn = connection()
+    cursor = conn.cursor()
+    query = """SELECT id, name, age FROM users"""
+    cursor.execute(query)
+    rows = cursor.fetchall()
+
+    users = []
+    for row in rows:
+        user = {
+            "id": row[0],
+            "name": row[1],
+            "email": row[2]
+        }
+
+        users.append(user)
+
+    return jsonify(users)
 
 
 if __name__ == "__main__":
